@@ -21,7 +21,7 @@ def make_make_plate(L, h):
 	mat.use_nodes = True
 	bsdf = mat.node_tree.nodes["Principled BSDF"]
 	texImage = mat.node_tree.nodes.new('ShaderNodeTexImage')
-	texImage.image = bpy.data.images.load("Y:\\0_Travaux\\Blender_lab\\pattern.png")
+	texImage.image = bpy.data.images.load("Y:\\0_Travaux\\VUMAT_Khan\\Blender_shot_lab\\pattern.png")
 	texImage.projection = "FLAT"
 	texImage.texture_mapping.scale= (4., 4., 1.)
 	texImage.texture_mapping.translation = (0.5, 0., 0.)
@@ -47,9 +47,18 @@ cam_data = bpy.data.cameras.new('camera')
 cam = bpy.data.objects.new('camera', cam_data)
 cam.location = (0., 0., 11.)
 cam.data.type = "ORTHO"
+cam.data.lens = 0.1
 bpy.ops.object.light_add(type='SUN', location=(0, 0, 11.))
 scene.camera = cam
 scene.render.image_settings.file_format = 'PNG'
+# cam.data.dof.aperture_ratio = 0.1
+bpy.context.scene.use_nodes = True
+distNode = bpy.context.scene.node_tree.nodes.new('CompositorNodeLensdist')
+bpy.context.scene.node_tree.links.new(bpy.context.scene.node_tree.nodes["Render Layers"].outputs[0], distNode.inputs[0])
+bpy.context.scene.node_tree.links.new(bpy.context.scene.node_tree.nodes["Composite"].inputs[0], distNode.outputs[0])
+distNode.inputs[1].default_value = 0.1
+distNode.use_projector = False
+
 
 angles = range(0, 20)
 bpy.ops.object.select_all(action='DESELECT')
@@ -60,7 +69,7 @@ for ang_actu in angles:
 	bpy.ops.transform.rotate(value=ang1, orient_axis='Y')
 	ang2 = -math.pi/3 + random.random()*math.pi/3
 	bpy.ops.transform.rotate(value=ang2, orient_axis='X')
-	scene.render.filepath = "Y:\\0_Travaux\\Blender_lab\\lens_dist_calib3\\ang_"+str(i)+".png"
+	scene.render.filepath = "Y:\\0_Travaux\\VUMAT_Khan\\Blender_shot_lab\\lens_dist_calib_80\\ang_"+str(i)+".png"
 	bpy.ops.render.render(write_still = 1)
 	bpy.ops.transform.rotate(value=-ang2, orient_axis='X')
 	bpy.ops.transform.rotate(value=-ang1, orient_axis='Y')

@@ -6,6 +6,7 @@ import numpy as np
 import math
 import random
 import mathutils
+import os
 
 
 def del_all():
@@ -53,7 +54,7 @@ def make_make_plate(L, h, chess_path):
     return cubeObj
 
 
-def make_camera(camPos, shot_coor)
+def make_camera(camPos, shot_coor):
     """
     Generate a camera at a given position and make it point given coordinates
 
@@ -130,7 +131,8 @@ def make_tilted_sample(angle, axis, camPos, title, chess_path):
 
 #################### MAIN CODE #############################
 conver = math.pi/180
-rep = "C:/Users/Simon/Documents/GitHub/Blender_shot_lab/sources/"
-chessboard_path = "C:/Users/Simon/Documents/GitHub/Blender_shot_lab/sources/chessboard.png"
+#rep = "C:/Users/Simon/Documents/GitHub/Blender_shot_lab/sources/"
+rep = os.path.dirname(os.path.abspath(( bpy.context.space_data.text.filepath)))+ "/../sources/"
+chessboard_path = rep  + "chessboard.png"
 make_tilted_sample(0., 'X', (0., 0., 5.), rep+"tilted_top", chessboard_path)
 make_tilted_sample(0., 'Z', (0., 0., 5.), rep+"tilted_left", chessboard_path)

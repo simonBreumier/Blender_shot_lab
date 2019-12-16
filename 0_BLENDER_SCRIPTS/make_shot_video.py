@@ -39,7 +39,7 @@ def make_shot(R, X, Y, Z):
     return current
 
 
-def make_camera(camPos, shot_coor)
+def make_camera(camPos, shot_coor):
     """
     Generate a camera at a given position and make it point given coordinates
 
@@ -168,8 +168,9 @@ doublesin_traj = make_doublesin_traj(numFrame)
 f = 0.
 resx = 500
 resy = 500
-
-fpath = 'C:/Users/Simon/Documents/GitHub/3Drecons/camLeft/camLeft_'
+fpath = os.path.dirname(os.path.abspath(__file__)) + "../../3Drecons/camLeft/camLeft_"
+#fpath = 'C:/Users/Simon/Documents/GitHub/3Drecons/camLeft/camLeft_'
 make_anim((0.,-5., 0.), doublesin_traj, fpath, resx, resy, (math.pi/2, 0., 0.), f)
-fpath = 'C:/Users/Simon/Documents/GitHub/3Drecons/camTop/camTop_'
+fpath = os.path.dirname(os.path.abspath(__file__)) + "../../3Drecons/camTop/camTop_"
+#fpath = 'C:/Users/Simon/Documents/GitHub/3Drecons/camTop/camTop_'
 make_anim((0.,0., 5.), doublesin_traj, fpath, resx, resy, (0., 0., math.pi/2), f)

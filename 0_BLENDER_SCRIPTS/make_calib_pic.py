@@ -6,6 +6,7 @@ import bpy
 import numpy as np
 import math
 import mathutils
+import os
 
 
 def del_all():
@@ -21,6 +22,10 @@ def del_all():
     for elem in bpy.context.scene.node_tree.nodes.keys():
         if not(elem == "Render Layers" or elem == "Composite"):
             bpy.context.scene.node_tree.nodes.remove(bpy.context.scene.node_tree.nodes[elem])
+            
+    for material in bpy.data.materials:
+        material.user_clear()
+        bpy.data.materials.remove(material)
 
 
 def make_make_plate(L, h, chess_path):
@@ -32,6 +37,7 @@ def make_make_plate(L, h, chess_path):
     :param chess_path: chessboard picture path
     :return:
     """
+    
     bpy.ops.mesh.primitive_cube_add(size=L, enter_editmode=False, location=(0, 0, 0))
     bpy.ops.transform.resize(value=(1, 1, h))
     cubeObj = bpy.context.scene.objects["Cube"]
@@ -44,7 +50,12 @@ def make_make_plate(L, h, chess_path):
     texImage.image = bpy.data.images.load(chess_path)
     texImage.texture_mapping.scale= (4., 4., 1.)
     texImage.texture_mapping.translation = (0.5, 0., 0.)
+    mat.node_tree.nodes["Principled BSDF"].inputs[5].default_value = 0 # wtf mat.specular_intesity = 0 non ?
+
     mat.node_tree.links.new(bsdf.inputs['Base Color'], texImage.outputs['Color'])
+
+
+    
     if cubeObj.data.materials:
         cubeObj.data.materials[0] = mat
     else:
@@ -53,7 +64,7 @@ def make_make_plate(L, h, chess_path):
     return cubeObj
 
 
-def make_camera(camPos, shot_coor)
+def make_camera(camPos, shot_coor):
     """
     Generate a camera at a given position and make it point given coordinates
     
@@ -104,8 +115,9 @@ f = h/L
 bpy.context.scene.render.resolution_x = 500
 bpy.context.scene.render.resolution_y = 500
 dist_param = 0.
-chess_path = "C:/Users/Simon/Documents/GitHub/Blender_shot_lab/sources/chessboard.png"
-render_path = "C:/Users/Simon/Documents/GitHub/Blender_shot_lab/lens_dist_calib"
+rep = os.path.dirname(os.path.abspath(( bpy.context.space_data.text.filepath)))
+chess_path = rep + "/../sources/chessboard.png"
+render_path = rep + "/../lens_dist_calib"
 
 scene = bpy.context.scene
 plateCalib = make_make_plate(L, f, chess_path)
